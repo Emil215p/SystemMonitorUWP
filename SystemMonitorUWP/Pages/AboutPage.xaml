@@ -7,5 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+  
+  <Grid>
+    <StackPanel Margin="20" HorizontalAlignment="Left">
+      <TextBlock FontWeight="Bold" FontSize="24"
+        Text="App Info"></TextBlock>
+      <TextBlock FontSize="18"
+        Text="System Monitor UWP is created by Emil215p You can find the project on Github:"></TextBlock>
+      
+    </StackPanel>
+  </Grid>
 </Page>

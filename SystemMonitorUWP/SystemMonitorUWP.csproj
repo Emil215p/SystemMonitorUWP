@@ -181,6 +181,9 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp">
       <Version>7.1.3-rc</Version>
     </PackageReference>
+    <PackageReference Include="OpenHardwareMonitorLib">
+      <Version>1.0.9300</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
