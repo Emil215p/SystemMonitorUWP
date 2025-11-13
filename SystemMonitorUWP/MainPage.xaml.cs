@@ -28,7 +28,20 @@ namespace SystemMonitorUWP
         public MainPage()
         {
             this.InitializeComponent();
-            //Debug.WriteLine("MyVar initial value: " + _shared.MyVar);
+            SidePanel.SelectionChanged += SidePanel_SelectionChanged;
+            ContentFrame.Navigate(typeof(Pages.InfoPage));
+        }
+
+        private void SidePanel_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            if (args.SelectedItem is NavigationViewItem selectedItem)
+            {
+                var pageType = Type.GetType($"SystemMonitorUWP.{selectedItem.Tag}");
+                if (pageType != null)
+                {
+                    ContentFrame.Navigate(pageType);
+                }
+            }
         }
     }
 }
