@@ -11,12 +11,11 @@
 
     <Grid>
         <StackPanel Margin="20" HorizontalAlignment="Left">
-            <TextBlock FontWeight="Bold" FontSize="24"
-                       Text="System Information"></TextBlock>
-            <TextBlock FontSize="18"
-                       Text="{Binding OSName}"></TextBlock>
-            <TextBlock FontSize="18"
-                       Text="{Binding OSVersion}"></TextBlock>
+            <TextBlock FontWeight="Bold" FontSize="24" Text="System Information"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding OSName}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding OSVersion}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding OSArch}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding NETVersion}"></TextBlock>
         </StackPanel>
     </Grid>
 </Page>

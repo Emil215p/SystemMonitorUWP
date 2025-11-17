@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Toolkit.Uwp.Helpers;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,6 +27,8 @@ namespace SystemMonitorUWP.Pages
     {
         public string OSName { get; set; }
         public string OSVersion { get; set; }
+        public string NETVersion { get; set; }
+        public string OSArch { get; set; }
 
         public InfoPage()
         {
@@ -32,6 +36,7 @@ namespace SystemMonitorUWP.Pages
 
             try
             {
+                Debug.WriteLine(RuntimeInformation.ProcessArchitecture);
                 LoadInfo();
             }
             catch (Exception ex)
@@ -44,8 +49,10 @@ namespace SystemMonitorUWP.Pages
 
         public void LoadInfo()
         {
-            this.OSName = "OS Name: " + SystemInformation.Instance.OperatingSystem;
-            this.OSVersion = "OS Version: " + SystemInformation.Instance.OperatingSystemVersion.ToString(); ;
+            this.OSName = "OS Name: " + RuntimeInformation.OSDescription;
+            this.OSVersion = "OS Version: " + SystemInformation.Instance.OperatingSystemVersion.ToString();
+            this.OSArch = "OS Architecture: " + RuntimeInformation.OSArchitecture;
+            this.NETVersion = ".NET Version: " + RuntimeInformation.FrameworkDescription;
         }
     }
 }
