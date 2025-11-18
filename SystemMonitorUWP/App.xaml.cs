@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Diagnostics;
 
 namespace SystemMonitorUWP
 {
@@ -52,6 +53,7 @@ namespace SystemMonitorUWP
 
                 try
                 {
+                    Debug.WriteLine("Launching full trust process...");
                     await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
                 }
                 catch (Exception ex)

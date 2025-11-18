@@ -15,7 +15,7 @@
   <Identity
     Name="6ec4adb3-d04f-434d-b082-22e3e256aaa3"
     Publisher="CN=juele"
-    Version="1.0.0.0" />
+    Version="1.0.4.0" />
 
   <Properties>
     <DisplayName>SystemMonitorUWP.Package</DisplayName>
@@ -44,10 +44,9 @@
         <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
-        <desktop:Extension Category="windows.fullTrustProcess" Executable="SystemMonitorUWP.Console\SystemMonitorUWP.Console.exe">
+        <desktop:Extension Category="windows.fullTrustProcess" Executable="SystemMonitorUWP.Console\SystemMonitorUWP.Console.exe" EntryPoint="main">
           <desktop:FullTrustProcess>
-            <desktop:ParameterGroup GroupId="SyncGroup" Parameters="/Sync"/>
-            <desktop:ParameterGroup GroupId="OtherGroup" Parameters="/Other"/>
+            <desktop:ParameterGroup GroupId="SystemMonitorUWP.Console" Parameters="/SystemMonitorUWP.Console"></desktop:ParameterGroup>
           </desktop:FullTrustProcess>
         </desktop:Extension>
       </Extensions>

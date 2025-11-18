@@ -4,14 +4,12 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
-  IgnorableNamespaces="uap mp rescap desktop">
+  IgnorableNamespaces="uap mp">
 
   <Identity
     Name="SystemMonitorUWP"
     Publisher="CN=juele"
-    Version="1.0.5.0" />
+    Version="1.0.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="be0106b0-0b90-4ee7-b458-53b900852bc5" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -42,20 +40,10 @@
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
-      <Extensions>
-        <desktop:Extension Category="windows.fullTrustProcess" Executable="SystemMonitorUWP.Console\SystemMonitorUWP.Console.exe">
-          <desktop:FullTrustProcess>
-            <desktop:ParameterGroup GroupId="SyncGroup" Parameters="/Sync"/>
-            <desktop:ParameterGroup GroupId="OtherGroup" Parameters="/Other"/>
-          </desktop:FullTrustProcess>
-        </desktop:Extension>
-      </Extensions>
     </Application>
   </Applications>
 
   <Capabilities>
-    <rescap:Capability Name="runFullTrust" />
-    <rescap:Capability Name="allowElevation" />
     <Capability Name="internetClient" />
   </Capabilities>
 </Package>

@@ -12,5 +12,5 @@ int main(int argc, char **argv)
         std::cout << "Argument: " << argv[1] << std::endl;
     }
 
-    return 0;
+    return 5;
 }
