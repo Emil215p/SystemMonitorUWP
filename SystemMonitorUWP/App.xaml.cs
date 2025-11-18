@@ -90,15 +90,28 @@ namespace SystemMonitorUWP
             }
         }
 
-       private string AllowExecuteRegString(string filePath)
+       private string AllowExecuteRegString(string exePath)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
+            if (string.IsNullOrWhiteSpace(exePath))
             {
-                throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
+                throw new ArgumentException("File path cannot be null or empty.", nameof(exePath));
             }
-            string EnableCommandLineProcesserRegCommand = $"reg ADD \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\EmbeddedMode\\ProcessLauncher\" /f /v AllowedExecutableFilesList /t REG_MULTI_SZ /d \"{filePath}\\0\"";
+            string EnableCommandLineProcesserRegCommand = $"reg ADD \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\EmbeddedMode\\ProcessLauncher\" /f /v AllowedExecutableFilesList /t REG_MULTI_SZ /d \"{exePath}\\0\"";
             Debug.WriteLine(EnableCommandLineProcesserRegCommand);
+            filePath = exePath;
             return EnableCommandLineProcesserRegCommand;
+        }
+
+        private void WDPLogin()
+        {
+            string DefaultHostName = "127.0.0.1";
+            string DefaultProtocol = "http";
+            string DefaultPort = "8080";
+            string DefaultUserName = "Administrator";
+            string DefaultPassword = "p@ssw0rd";
+
+            string WdpRunCommandApi = "/api/iot/processmanagement/runcommand";
+            string WdpRunCommandWithOutputApi = "/api/iot/processmanagement/runcommandwithoutput";
         }
 
         private async void IoTCoreLauncher()
@@ -111,18 +124,9 @@ namespace SystemMonitorUWP
                     StandardError = null
                 };
 
-                string DefaultHostName = "127.0.0.1";
-                string DefaultProtocol = "http";
-                string DefaultPort = "8080";
-                string DefaultUserName = "Administrator";
-                string DefaultPassword = "p@ssw0rd";
-
-                string WdpRunCommandApi = "/api/iot/processmanagement/runcommand";
-                string WdpRunCommandWithOutputApi = "/api/iot/processmanagement/runcommandwithoutput";
-
                 AllowExecuteRegString("C:\\Windows\\System32\\cmd.exe");
 
-                string executablePath = "C:\\Windows\\System32\\cmd.exe";
+                string executablePath = filePath;
                 string arguments = "/c echo Hello from IoTCoreLauncher";
 
                 Debug.WriteLine($"Launching process: {executablePath} {arguments}");
