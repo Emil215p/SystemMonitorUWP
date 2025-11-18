@@ -17,6 +17,8 @@ using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Windows.System;
+using System.Runtime.CompilerServices;
 
 namespace SystemMonitorUWP
 {
@@ -27,6 +29,8 @@ namespace SystemMonitorUWP
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
+
+        public string filePath;
 
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
@@ -65,14 +69,74 @@ namespace SystemMonitorUWP
                         System.Diagnostics.Debug.WriteLine($"Failed to launch console app: {ex.Message}");
                     }
                 }
+                else if (RuntimeInformation.OSArchitecture.ToString() == "Arm")
+                {
+                    try
+                    {
+                        Debug.WriteLine("Launching console app for UWP...");
+                        IoTCoreLauncher();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Failed to launch console app.: {ex.Message}");
+                    }
+                }
                 else
                 {
-                    Debug.WriteLine("ARM is unsupported for full trust.");
+                    Debug.WriteLine("Error.");
                 }
 
                 Window.Current.Activate();
             }
         }
+
+       private string AllowExecuteRegString(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
+            }
+            string EnableCommandLineProcesserRegCommand = $"reg ADD \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\EmbeddedMode\\ProcessLauncher\" /f /v AllowedExecutableFilesList /t REG_MULTI_SZ /d \"{filePath}\\0\"";
+            Debug.WriteLine(EnableCommandLineProcesserRegCommand);
+            return EnableCommandLineProcesserRegCommand;
+        }
+
+        private async void IoTCoreLauncher()
+        {
+            try
+            {
+                ProcessLauncherOptions options = new ProcessLauncherOptions
+                {
+                    StandardOutput = null,
+                    StandardError = null
+                };
+
+                string DefaultHostName = "127.0.0.1";
+                string DefaultProtocol = "http";
+                string DefaultPort = "8080";
+                string DefaultUserName = "Administrator";
+                string DefaultPassword = "p@ssw0rd";
+
+                string WdpRunCommandApi = "/api/iot/processmanagement/runcommand";
+                string WdpRunCommandWithOutputApi = "/api/iot/processmanagement/runcommandwithoutput";
+
+                AllowExecuteRegString("C:\\Windows\\System32\\cmd.exe");
+
+                string executablePath = "C:\\Windows\\System32\\cmd.exe";
+                string arguments = "/c echo Hello from IoTCoreLauncher";
+
+                Debug.WriteLine($"Launching process: {executablePath} {arguments}");
+
+                ProcessLauncherResult result = await ProcessLauncher.RunToCompletionAsync(executablePath, arguments, options);
+
+                Debug.WriteLine($"Process exited with code: {result.ExitCode}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to launch process: {ex.Message}");
+            }
+        }
+
 
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
