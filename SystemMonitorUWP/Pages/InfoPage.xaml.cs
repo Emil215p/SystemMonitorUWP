@@ -30,7 +30,11 @@ namespace SystemMonitorUWP.Pages
         public string OSVersion { get; set; }
         public string NETVersion { get; set; }
         public string OSArch { get; set; }
-        public string SysArch { get; set; }
+        public string CPUArch { get; set; }
+        public string CPURevision { get; set; }
+        public string CPULevel { get; set; }
+        public string CPUType { get; set; }
+        public string CPUCores { get; set; }
 
         public InfoPage()
         {
@@ -50,10 +54,17 @@ namespace SystemMonitorUWP.Pages
 
         public void LoadInfo()
         {
+            SYSTEM_INFO systemInfo = new SYSTEM_INFO();
+            GetNativeSystemInfo(ref systemInfo);
+
             this.OSName = "OS Name: " + RuntimeInformation.OSDescription;
             this.OSVersion = "OS Version: " + SystemInformation.Instance.OperatingSystemVersion.ToString();
             this.OSArch = "OS Architecture: " + RuntimeInformation.OSArchitecture;
-            this.SysArch = "Processor Architecture: " + GetProcessorArchitecture();
+            this.CPUArch = "Processor Architecture: " + GetProcessorArchitecture();
+            this.CPURevision = "CPU Revision: " + GetProcessorRevision(systemInfo.wProcessorRevision);
+            this.CPULevel = "CPU Level: " + GetProcessorLevel(systemInfo.wProcessorLevel);
+            this.CPUType = "CPU Type: " + GetProcessorType(systemInfo.dwProcessorType);
+            this.CPUCores = "Number of CPU Threads: " + GetNumberOfProcessors(systemInfo.dwNumberOfProcessors);
             this.NETVersion = ".NET Version: " + RuntimeInformation.FrameworkDescription;
         }
 
@@ -70,6 +81,29 @@ namespace SystemMonitorUWP.Pages
                 case 12: return "ARM64";
                 default: return "Unknown";
             }
+        }
+
+        private string GetProcessorRevision(ushort revision)
+        {
+            byte major = (byte)(revision >> 8);
+            byte minor = (byte)(revision & 0xFF);
+            return $"{major:X2}{minor:X2}";
+        }
+
+        private string GetProcessorLevel(uint level)
+        {
+            return level.ToString();
+        }
+
+
+        private string GetProcessorType(uint type)
+        {
+            return type.ToString();
+        }
+
+        private string GetNumberOfProcessors(uint number)
+        {
+            return number.ToString();
         }
 
         [StructLayout(LayoutKind.Sequential)]

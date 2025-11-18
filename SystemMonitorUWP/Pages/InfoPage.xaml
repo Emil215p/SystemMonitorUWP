@@ -15,7 +15,11 @@
             <TextBlock FontSize="18" Text="{Binding OSName}"></TextBlock>
             <TextBlock FontSize="18" Text="{Binding OSVersion}"></TextBlock>
             <TextBlock FontSize="18" Text="{Binding OSArch}"></TextBlock>
-            <TextBlock FontSize="18" Text="{Binding SysArch}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding CPUArch}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding CPUCores}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding CPURevision}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding CPULevel}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding CPUType}"></TextBlock>
             <TextBlock FontSize="18" Text="{Binding NETVersion}"></TextBlock>
         </StackPanel>
     </Grid>
