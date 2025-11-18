@@ -15,6 +15,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace SystemMonitorUWP
 {
@@ -51,14 +53,21 @@ namespace SystemMonitorUWP
                     rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
 
-                try
+                if (RuntimeInformation.OSArchitecture.ToString() != "Arm")
                 {
-                    Debug.WriteLine("Launching full trust process...");
-                    await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                    try
+                    {
+                        Debug.WriteLine("Launching full trust process...");
+                        await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Failed to launch console app: {ex.Message}");
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    System.Diagnostics.Debug.WriteLine($"Failed to launch console app: {ex.Message}");
+                    Debug.WriteLine("ARM is unsupported for full trust.");
                 }
 
                 Window.Current.Activate();
