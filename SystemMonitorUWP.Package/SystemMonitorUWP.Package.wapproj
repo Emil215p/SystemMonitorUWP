@@ -168,4 +168,10 @@
     <ProjectReference Include="..\SystemMonitorUWP.Console\SystemMonitorUWP.Console.vcxproj" />
     <ProjectReference Include="..\SystemMonitorUWP\SystemMonitorUWP.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\$(Platform)\$(Configuration)\SystemMonitorUWP.Console.exe">
+      <PackagePath>SystemMonitorUWP.Console.exe</PackagePath>
+    </Content>
+  </ItemGroup>
 </Project>

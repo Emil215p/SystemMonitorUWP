@@ -19,6 +19,9 @@ using System.Runtime.InteropServices;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Windows.System;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using Windows.Storage.Streams;
+using Windows.UI.Core;
 
 namespace SystemMonitorUWP
 {
@@ -57,6 +60,7 @@ namespace SystemMonitorUWP
                     rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
 
+                Debug.WriteLine(RuntimeInformation.OSArchitecture.ToString());
                 if (RuntimeInformation.OSArchitecture.ToString() != "Arm")
                 {
                     try
@@ -66,19 +70,19 @@ namespace SystemMonitorUWP
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Failed to launch console app: {ex.Message}");
+                        Debug.WriteLine($"Failed to launch console app: {ex.Message}");
                     }
                 }
                 else if (RuntimeInformation.OSArchitecture.ToString() == "Arm")
                 {
                     try
                     {
-                        Debug.WriteLine("Launching console app for UWP...");
-                        IoTCoreLauncher();
+                        Debug.WriteLine("Launching console app via processlauncher...");
+                        await RunProcess();
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Failed to launch console app.: {ex.Message}");
+                        Debug.WriteLine($"Failed to launch console app.: {ex.Message}");
                     }
                 }
                 else
@@ -90,57 +94,60 @@ namespace SystemMonitorUWP
             }
         }
 
-       private string AllowExecuteRegString(string exePath)
+        private async Task RunProcess()
         {
-            if (string.IsNullOrWhiteSpace(exePath))
+            var options = new ProcessLauncherOptions();
+            var standardOutput = new InMemoryRandomAccessStream();
+            var standardError = new InMemoryRandomAccessStream();
+            options.StandardOutput = standardOutput;
+            options.StandardError = standardError;
+
+            await CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                throw new ArgumentException("File path cannot be null or empty.", nameof(exePath));
-            }
-            string EnableCommandLineProcesserRegCommand = $"reg ADD \"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\EmbeddedMode\\ProcessLauncher\" /f /v AllowedExecutableFilesList /t REG_MULTI_SZ /d \"{exePath}\\0\"";
-            Debug.WriteLine(EnableCommandLineProcesserRegCommand);
-            filePath = exePath;
-            return EnableCommandLineProcesserRegCommand;
-        }
-
-        private void WDPLogin()
-        {
-            string DefaultHostName = "127.0.0.1";
-            string DefaultProtocol = "http";
-            string DefaultPort = "8080";
-            string DefaultUserName = "Administrator";
-            string DefaultPassword = "p@ssw0rd";
-
-            string WdpRunCommandApi = "/api/iot/processmanagement/runcommand";
-            string WdpRunCommandWithOutputApi = "/api/iot/processmanagement/runcommandwithoutput";
-        }
-
-        private async void IoTCoreLauncher()
-        {
-            try
-            {
-                ProcessLauncherOptions options = new ProcessLauncherOptions
+                try
                 {
-                    StandardOutput = null,
-                    StandardError = null
-                };
+                    var result = await ProcessLauncher.RunToCompletionAsync("SystemMonitorUWP.Console.exe", "", options);
 
-                AllowExecuteRegString("C:\\Windows\\System32\\cmd.exe");
+                    Debug.WriteLine("Process Exit Code: " + result.ExitCode);
 
-                string executablePath = filePath;
-                string arguments = "/c echo Hello from IoTCoreLauncher";
+                    using (var outStreamRedirect = standardOutput.GetInputStreamAt(0))
+                    {
+                        var size = standardOutput.Size;
+                        using (var dataReader = new DataReader(outStreamRedirect))
+                        {
+                            var bytesLoaded = await dataReader.LoadAsync((uint)size);
+                            var stringRead = dataReader.ReadString(bytesLoaded);
+                            Debug.WriteLine(stringRead);
+                        }
+                    }
 
-                Debug.WriteLine($"Launching process: {executablePath} {arguments}");
-
-                ProcessLauncherResult result = await ProcessLauncher.RunToCompletionAsync(executablePath, arguments, options);
-
-                Debug.WriteLine($"Process exited with code: {result.ExitCode}");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Failed to launch process: {ex.Message}");
-            }
+                    using (var errStreamRedirect = standardError.GetInputStreamAt(0))
+                    {
+                        using (var dataReader = new DataReader(errStreamRedirect))
+                        {
+                            var size = standardError.Size;
+                            var bytesLoaded = await dataReader.LoadAsync((uint)size);
+                            var stringRead = dataReader.ReadString(bytesLoaded);
+                            Debug.WriteLine(stringRead);
+                        }
+                    }
+                }
+                catch (UnauthorizedAccessException uex)
+                {
+                    Debug.WriteLine("Exception Thrown: " + uex.Message + "\n");
+                    Debug.Write("\nMake sure you're allowed to run the specified exe; either\n" +
+                                         "\t1) Add the exe to the AppX package, or\n" +
+                                         "\t2) Add the absolute path of the exe to the allow list:\n" +
+                                         "\t\tHKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\EmbeddedMode\\ProcessLauncherAllowedExecutableFilesList.\n\n" +
+                                         "Also, make sure the <iot:Capability Name=\"systemManagement\" /> has been added to the AppX manifest capabilities.\n");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Exception Thrown:" + ex.Message + "\n");
+                    Debug.WriteLine(ex.StackTrace + "\n");
+                }
+            });
         }
-
 
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
