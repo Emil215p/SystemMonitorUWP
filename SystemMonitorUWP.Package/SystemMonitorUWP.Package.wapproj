@@ -170,7 +170,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\$(Platform)\$(Configuration)\SystemMonitorUWP.Console.exe">
+    <Content Include="..\ARM\$(Configuration)\SystemMonitorUWP.Console.exe">
       <PackagePath>SystemMonitorUWP.Console.exe</PackagePath>
     </Content>
   </ItemGroup>
