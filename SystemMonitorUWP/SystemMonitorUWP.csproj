@@ -191,9 +191,6 @@
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.7</Version>
     </PackageReference>
-    <PackageReference Include="OpenHardwareMonitorLib">
-      <Version>1.0.9300</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="SystemMonitorUWP_TemporaryKey.pfx" />

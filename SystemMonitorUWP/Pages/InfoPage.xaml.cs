@@ -17,7 +17,6 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Windows.Security.ExchangeActiveSyncProvisioning;
-using HidSharp;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
