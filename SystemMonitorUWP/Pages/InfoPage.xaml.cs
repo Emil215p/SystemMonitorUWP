@@ -88,14 +88,15 @@ namespace SystemMonitorUWP.Pages
             SYSTEM_INFO systemInfo = new SYSTEM_INFO();
             GetNativeSystemInfo(ref systemInfo);
 
-            switch (systemInfo.wProcessorArchitecture)
+            return systemInfo.wProcessorArchitecture switch
             {
-                case 0: return "x86";
-                case 9: return "x64";
-                case 5: return "ARM";
-                case 12: return "ARM64";
-                default: return "Unknown";
-            }
+                0 => "x86",
+                5 => "ARM",
+                6 => "Itanium",
+                9 => "x64",
+                12 => "ARM64",
+                _ => "Unknown",
+            };
         }
 
         private string GetProcessorRevision(ushort revision)
