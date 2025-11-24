@@ -21,6 +21,13 @@
             <TextBlock FontSize="18" Text="{Binding CPULevel}"></TextBlock>
             <TextBlock FontSize="18" Text="{Binding CPUType}"></TextBlock>
             <TextBlock FontSize="18" Text="{Binding NETVersion}"></TextBlock>
+            <TextBlock><LineBreak></LineBreak></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding DeviceID}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding OperatingSystem}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding FriendlyName}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding SystemManufacturer}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding SystemProductName}"></TextBlock>
+            <TextBlock FontSize="18" Text="{Binding SystemSku}"></TextBlock>
         </StackPanel>
     </Grid>
 </Page>

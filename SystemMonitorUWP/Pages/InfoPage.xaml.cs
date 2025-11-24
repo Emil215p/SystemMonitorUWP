@@ -16,6 +16,8 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Windows.Security.ExchangeActiveSyncProvisioning;
+using HidSharp;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -35,11 +37,16 @@ namespace SystemMonitorUWP.Pages
         public string CPULevel { get; set; }
         public string CPUType { get; set; }
         public string CPUCores { get; set; }
+        public string DeviceID { get; set; }
+        public string OperatingSystem { get; set; }
+        public string FriendlyName { get; set; }
+        public string SystemManufacturer { get; set; }
+        public string SystemProductName { get; set; }
+        public string SystemSku { get; set; }
 
         public InfoPage()
         {
             this.InitializeComponent();
-
             try
             {
                 LoadInfo();
@@ -56,6 +63,14 @@ namespace SystemMonitorUWP.Pages
         {
             SYSTEM_INFO systemInfo = new SYSTEM_INFO();
             GetNativeSystemInfo(ref systemInfo);
+
+            EasClientDeviceInformation CurrentDeviceInfor = new EasClientDeviceInformation();
+            this.DeviceID = "Device ID: " + CurrentDeviceInfor.Id.ToString();
+            this.OperatingSystem = "Operating System: " + CurrentDeviceInfor.OperatingSystem;
+            this.FriendlyName = "Device Name: " + CurrentDeviceInfor.FriendlyName;
+            this.SystemManufacturer = "Device Manufacturer: " + CurrentDeviceInfor.SystemManufacturer;
+            this.SystemProductName = "Product Name: " + CurrentDeviceInfor.SystemProductName;
+            this.SystemSku = "System SKU: " + CurrentDeviceInfor.SystemSku;
 
             this.OSName = "OS Name: " + RuntimeInformation.OSDescription;
             this.OSVersion = "OS Version: " + SystemInformation.Instance.OperatingSystemVersion.ToString();
