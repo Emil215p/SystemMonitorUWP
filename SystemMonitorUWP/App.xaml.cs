@@ -32,6 +32,7 @@ namespace SystemMonitorUWP
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
+        public string ConsoleReturnARM { get; set; }
         public string ConsoleReturn { get; set; }
         public string filePath;
 
@@ -107,7 +108,7 @@ namespace SystemMonitorUWP
                     var result = await ProcessLauncher.RunToCompletionAsync("SystemMonitorUWP.Console.exe", "", options);
 
                     Debug.WriteLine("Process Exit Code: " + result.ExitCode);
-                    this.ConsoleReturn = result.ExitCode.ToString();
+                    this.ConsoleReturnARM = result.ExitCode.ToString();
 
                     using (var outStreamRedirect = standardOutput.GetInputStreamAt(0))
                     {

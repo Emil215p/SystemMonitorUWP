@@ -11,7 +11,8 @@
     <Grid>
        <StackPanel>
             <TextBlock Text="Monitoring Status: " FontSize="18"></TextBlock>
-            <TextBlock Text="{x:Bind AppInstance.ConsoleReturn, Mode=OneWay}"/>
+            <TextBlock Text="{x:Bind AppInstance.ConsoleReturnARM}"></TextBlock>
+            <TextBlock Text="{x:Bind AppInstance.ConsoleReturn}"></TextBlock>
        </StackPanel>
    </Grid>
 </Page>
