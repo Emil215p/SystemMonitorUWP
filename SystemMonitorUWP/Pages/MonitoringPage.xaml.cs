@@ -27,4 +27,6 @@ namespace SystemMonitorUWP.Pages
             this.InitializeComponent();
         }
     }
+
+
 }

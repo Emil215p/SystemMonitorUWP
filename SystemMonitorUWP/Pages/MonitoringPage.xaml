@@ -9,6 +9,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <StackPanel>
+            <TextBlock Text="Monitoring Status: " FontSize="18"></TextBlock>
+            <TextBlock Text="{Binding }"></TextBlock>
+        </StackPanel>
     </Grid>
 </Page>
