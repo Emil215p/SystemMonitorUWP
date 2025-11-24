@@ -167,11 +167,28 @@
   <ItemGroup>
     <ProjectReference Include="..\SystemMonitorUWP.Console\SystemMonitorUWP.Console.vcxproj" />
     <ProjectReference Include="..\SystemMonitorUWP\SystemMonitorUWP.csproj" />
+    <ProjectReference Include="..\Test\Test.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="..\ARM\$(Configuration)\SystemMonitorUWP.Console.exe">
       <PackagePath>SystemMonitorUWP.Console.exe</PackagePath>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Test\bin\$(Configuration)\net8.0\test.exe">
+      <PackagePath>Test.exe</PackagePath>
+    </Content>
+    <Content Include="..\Test\bin\$(Configuration)\net8.0\test.dll">
+      <PackagePath>Test.dll</PackagePath>
+    </Content>
+    <Content Include="..\Test\bin\$(Configuration)\net8.0\test.pdb">
+      <PackagePath>Test.pdb</PackagePath>
+    </Content>
+    <Content Include="..\Test\bin\$(Configuration)\net8.0\test.runtimeconfig.json">
+      <PackagePath>test.runtimeconfig.json</PackagePath>
+    </Content>
+    <Content Include="..\Test\bin\$(Configuration)\net8.0\test.deps.json">
+      <PackagePath>test.deps.json</PackagePath>
     </Content>
   </ItemGroup>
 </Project>

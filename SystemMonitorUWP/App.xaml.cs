@@ -106,7 +106,7 @@ namespace SystemMonitorUWP
             {
                 try
                 {
-                    var result = await ProcessLauncher.RunToCompletionAsync("SystemMonitorUWP.Console.exe", "", options);
+                    var result = await ProcessLauncher.RunToCompletionAsync("Test.exe", "", options);
 
                     Debug.WriteLine("Process Exit Code: " + result.ExitCode);
 
