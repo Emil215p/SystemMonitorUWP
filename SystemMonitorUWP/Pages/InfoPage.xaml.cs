@@ -61,10 +61,10 @@ namespace SystemMonitorUWP.Pages
 
         public void LoadInfo()
         {
-            SYSTEM_INFO systemInfo = new SYSTEM_INFO();
+            SYSTEM_INFO systemInfo = new();
             GetNativeSystemInfo(ref systemInfo);
 
-            EasClientDeviceInformation CurrentDeviceInfor = new EasClientDeviceInformation();
+            EasClientDeviceInformation CurrentDeviceInfor = new();
             this.DeviceID = "Device ID: " + CurrentDeviceInfor.Id.ToString();
             this.OperatingSystem = "Operating System: " + CurrentDeviceInfor.OperatingSystem;
             this.FriendlyName = "Device Name: " + CurrentDeviceInfor.FriendlyName;
@@ -85,7 +85,7 @@ namespace SystemMonitorUWP.Pages
 
         private string GetProcessorArchitecture()
         {
-            SYSTEM_INFO systemInfo = new SYSTEM_INFO();
+            SYSTEM_INFO systemInfo = new();
             GetNativeSystemInfo(ref systemInfo);
 
             return systemInfo.wProcessorArchitecture switch

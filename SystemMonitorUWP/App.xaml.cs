@@ -37,9 +37,7 @@ namespace SystemMonitorUWP
 
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
-
-            if (rootFrame == null)
+            if (Window.Current.Content is not Frame rootFrame)
             {
                 rootFrame = new Frame();
 
@@ -113,23 +111,19 @@ namespace SystemMonitorUWP
                     using (var outStreamRedirect = standardOutput.GetInputStreamAt(0))
                     {
                         var size = standardOutput.Size;
-                        using (var dataReader = new DataReader(outStreamRedirect))
-                        {
-                            var bytesLoaded = await dataReader.LoadAsync((uint)size);
-                            var stringRead = dataReader.ReadString(bytesLoaded);
-                            Debug.WriteLine(stringRead);
-                        }
+                        using var dataReader = new DataReader(outStreamRedirect);
+                        var bytesLoaded = await dataReader.LoadAsync((uint)size);
+                        var stringRead = dataReader.ReadString(bytesLoaded);
+                        Debug.WriteLine(stringRead);
                     }
 
-                    using (var errStreamRedirect = standardError.GetInputStreamAt(0))
+                    using var errStreamRedirect = standardError.GetInputStreamAt(0);
+                    using (var dataReader = new DataReader(errStreamRedirect))
                     {
-                        using (var dataReader = new DataReader(errStreamRedirect))
-                        {
-                            var size = standardError.Size;
-                            var bytesLoaded = await dataReader.LoadAsync((uint)size);
-                            var stringRead = dataReader.ReadString(bytesLoaded);
-                            Debug.WriteLine(stringRead);
-                        }
+                        var size = standardError.Size;
+                        var bytesLoaded = await dataReader.LoadAsync((uint)size);
+                        var stringRead = dataReader.ReadString(bytesLoaded);
+                        Debug.WriteLine(stringRead);
                     }
                 }
                 catch (UnauthorizedAccessException uex)
