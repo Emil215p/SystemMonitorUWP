@@ -25,14 +25,14 @@ using Windows.UI.Core;
 
 namespace SystemMonitorUWP
 {
-    sealed partial class App : Application
+    public sealed partial class App : Application
     {
         public App()
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
-
+        public string ConsoleReturn { get; set; }
         public string filePath;
 
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
@@ -107,6 +107,7 @@ namespace SystemMonitorUWP
                     var result = await ProcessLauncher.RunToCompletionAsync("SystemMonitorUWP.Console.exe", "", options);
 
                     Debug.WriteLine("Process Exit Code: " + result.ExitCode);
+                    this.ConsoleReturn = result.ExitCode.ToString();
 
                     using (var outStreamRedirect = standardOutput.GetInputStreamAt(0))
                     {

@@ -22,6 +22,7 @@ namespace SystemMonitorUWP.Pages
     /// </summary>
     public sealed partial class MonitoringPage : Page
     {
+        public App AppInstance => (App)Application.Current;
         public MonitoringPage()
         {
             this.InitializeComponent();
