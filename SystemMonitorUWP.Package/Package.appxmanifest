@@ -19,7 +19,7 @@
   <Identity
     Name="6ec4adb3-d04f-434d-b082-22e3e256aaa3"
     Publisher="CN=juele"
-    Version="1.0.9.0" />
+    Version="1.0.10.0" />
 
   <Properties>
     <DisplayName>SystemMonitorUWP.Package</DisplayName>
