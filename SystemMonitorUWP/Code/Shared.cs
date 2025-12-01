@@ -1,15 +1,144 @@
+using System.Threading.Tasks;
+using Windows.Storage.Streams;
+using Windows.System;
+using Windows.UI.Core;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System;
+using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Navigation;
+
 namespace SystemMonitorUWP.Code
 {
     public class Shared
     {
         private static readonly Shared _instance = new Shared();
         public static Shared Instance => _instance;
-
-        //public int MyVar = 5;
+        public string ConsoleReturnARM { get; set; }
+        public string ConsoleReturn { get; set; }
+        public string filePath;
 
         private Shared()
         {
 
         }
+
+        public async Task FullTrustLauncher(LaunchActivatedEventArgs e)
+        {
+            if (Window.Current.Content is not Frame rootFrame)
+            {
+                rootFrame = new Frame();
+
+                rootFrame.NavigationFailed += OnNavigationFailed;
+
+                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                {
+
+                }
+
+                Window.Current.Content = rootFrame;
+            }
+
+            if (e.PrelaunchActivated == false)
+            {
+                if (rootFrame.Content == null)
+                {
+                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                }
+
+                Debug.WriteLine(RuntimeInformation.OSArchitecture.ToString());
+                if (RuntimeInformation.OSArchitecture.ToString() != "Arm")
+                {
+                    try
+                    {
+                        Debug.WriteLine("Launching full trust process...");
+                        await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Failed to launch console app: {ex.Message}");
+                    }
+                }
+                else if (RuntimeInformation.OSArchitecture.ToString() == "Arm")
+                {
+                    try
+                    {
+                        Debug.WriteLine("Launching console app via processlauncher...");
+                        await RunProcess();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Failed to launch console app.: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("Error.");
+                }
+
+                Window.Current.Activate();
+            }
+        }
+
+        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+        }
+
+        public async Task RunProcess()
+        {
+            var options = new ProcessLauncherOptions();
+            var standardOutput = new InMemoryRandomAccessStream();
+            var standardError = new InMemoryRandomAccessStream();
+            options.StandardOutput = standardOutput;
+            options.StandardError = standardError;
+
+            await CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                try
+                {
+                    var result = await ProcessLauncher.RunToCompletionAsync("SystemMonitorUWP.Console.exe", "", options);
+
+                    Debug.WriteLine("Process Exit Code: " + result.ExitCode);
+                    this.ConsoleReturnARM = result.ExitCode.ToString();
+
+                    using (var outStreamRedirect = standardOutput.GetInputStreamAt(0))
+                    {
+                        var size = standardOutput.Size;
+                        using var dataReader = new DataReader(outStreamRedirect);
+                        var bytesLoaded = await dataReader.LoadAsync((uint)size);
+                        var stringRead = dataReader.ReadString(bytesLoaded);
+                        Debug.WriteLine(stringRead);
+                    }
+
+                    using var errStreamRedirect = standardError.GetInputStreamAt(0);
+                    using (var dataReader = new DataReader(errStreamRedirect))
+                    {
+                        var size = standardError.Size;
+                        var bytesLoaded = await dataReader.LoadAsync((uint)size);
+                        var stringRead = dataReader.ReadString(bytesLoaded);
+                        Debug.WriteLine(stringRead);
+                    }
+                }
+                catch (UnauthorizedAccessException uex)
+                {
+                    Debug.WriteLine("Exception Thrown: " + uex.Message + "\n");
+                    Debug.Write("\nMake sure you're allowed to run the specified exe; either\n" +
+                                         "\t1) Add the exe to the AppX package, or\n" +
+                                         "\t2) Add the absolute path of the exe to the allow list:\n" +
+                                         "\t\tHKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\EmbeddedMode\\ProcessLauncherAllowedExecutableFilesList.\n\n" +
+                                         "Also, make sure the <iot:Capability Name=\"systemManagement\" /> has been added to the AppX manifest capabilities.\n");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Exception Thrown:" + ex.Message + "\n");
+                    Debug.WriteLine(ex.StackTrace + "\n");
+                }
+            });
+        }
+
     }
 }

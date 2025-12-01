@@ -12,8 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
+using SystemMonitorUWP.Code;
 
 namespace SystemMonitorUWP.Pages
 {
@@ -23,11 +22,11 @@ namespace SystemMonitorUWP.Pages
     public sealed partial class MonitoringPage : Page
     {
         public App AppInstance => (App)Application.Current;
+        public Shared SharedInstance { get; } = Shared.Instance;
+
         public MonitoringPage()
         {
             this.InitializeComponent();
         }
     }
-
-
 }
