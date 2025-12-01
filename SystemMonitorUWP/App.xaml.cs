@@ -32,7 +32,6 @@ namespace SystemMonitorUWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            Shared.Instance.RunProcess();
         }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs e)

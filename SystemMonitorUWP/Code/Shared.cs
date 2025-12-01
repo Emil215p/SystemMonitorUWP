@@ -126,11 +126,6 @@ namespace SystemMonitorUWP.Code
                 catch (UnauthorizedAccessException uex)
                 {
                     Debug.WriteLine("Exception Thrown: " + uex.Message + "\n");
-                    Debug.Write("\nMake sure you're allowed to run the specified exe; either\n" +
-                                         "\t1) Add the exe to the AppX package, or\n" +
-                                         "\t2) Add the absolute path of the exe to the allow list:\n" +
-                                         "\t\tHKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\EmbeddedMode\\ProcessLauncherAllowedExecutableFilesList.\n\n" +
-                                         "Also, make sure the <iot:Capability Name=\"systemManagement\" /> has been added to the AppX manifest capabilities.\n");
                 }
                 catch (Exception ex)
                 {
