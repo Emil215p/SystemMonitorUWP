@@ -9,10 +9,16 @@
    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-       <StackPanel>
-            <TextBlock Text="Monitoring Status: " FontSize="18"></TextBlock>
-            <TextBlock Text="{x:Bind SharedInstance.ConsoleReturnARM}"></TextBlock>
-            <TextBlock Text="{x:Bind SharedInstance.ConsoleReturn}"></TextBlock>
-       </StackPanel>
+        <StackPanel Margin="20" HorizontalAlignment="Left">
+            <TextBlock Text="Monitoring Status:" FontWeight="Bold" FontSize="24"></TextBlock>
+            <TextBlock Text="{x:Bind MemoryLoad}" FontSize="18"></TextBlock>
+            <TextBlock Text="{x:Bind TotalMemory}" FontSize="18"></TextBlock>
+            <TextBlock Text="{x:Bind AvailableMemory}" FontSize="18"></TextBlock>
+            <TextBlock Text="{x:Bind TotalPageFile}" FontSize="18"></TextBlock>
+            <TextBlock Text="{x:Bind AvailablePageFile}" FontSize="18"></TextBlock>
+            <TextBlock Text="{x:Bind TotalVirtualMemory}" FontSize="18"></TextBlock>
+            <TextBlock Text="{x:Bind AvailableVirtualMemory}" FontSize="18"></TextBlock>
+            <TextBlock Text="{x:Bind AvailableExtendedMemory}" FontSize="18"></TextBlock>
+        </StackPanel>
    </Grid>
 </Page>

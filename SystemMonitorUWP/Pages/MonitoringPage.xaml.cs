@@ -15,6 +15,8 @@ using Windows.UI.Xaml.Navigation;
 using SystemMonitorUWP.Code;
 using System.Diagnostics;
 using Windows.Storage;
+using System.Security.AccessControl;
+using Windows.Storage.Provider;
 
 namespace SystemMonitorUWP.Pages
 {
@@ -25,27 +27,63 @@ namespace SystemMonitorUWP.Pages
     {
         public App AppInstance => (App)Application.Current;
         public Shared SharedInstance { get; } = Shared.Instance;
+        public string[] CsvValues { get; private set; }
+        public string MemoryLoad { get; set; }
+        public string TotalMemory { get; set; }
+        public string AvailableMemory { get; set; }
+        public string TotalPageFile { get; set; }
+        public string AvailablePageFile { get; set; }
+        public string TotalVirtualMemory { get; set; }
+        public string AvailableVirtualMemory { get; set; }
+        public string AvailableExtendedMemory { get; set; }
+
+        private DispatcherTimer _refreshTimer;
 
         public MonitoringPage()
         {
             this.InitializeComponent();
-            ReadAndLogCommonCsv();
+            StartRefreshTimer();
         }
 
-        private async void ReadAndLogCommonCsv()
+        private void StartRefreshTimer()
+        {
+            _refreshTimer = new DispatcherTimer();
+            _refreshTimer.Interval = TimeSpan.FromSeconds(5);
+            _refreshTimer.Tick += RefreshTimer_Tick;
+            _refreshTimer.Start();
+        }
+
+        private async void RefreshTimer_Tick(object sender, object e)
+        {
+            await Shared.Instance.FullTrustLauncher(null);
+            ReadCSV("Common");
+        }
+
+        private async void ReadCSV(string CSV)
         {
             try
             {
-                StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync("Common.csv");
+                StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(CSV + ".csv");
                 string[] lines = (await FileIO.ReadTextAsync(file)).Split([',']);
-                foreach (var line in lines)
+                CsvValues = lines;
+                foreach (var line in CsvValues)
                 {
                     Debug.WriteLine($"Value: {line}");
                 }
+                Debug.WriteLine(CsvValues.Length);
+                MemoryLoad = "Memory usage: " + CsvValues[0] + "%";
+                TotalMemory = "Total memory: " + CsvValues[1] + " kb";
+                AvailableMemory = "Available memory: " + CsvValues[2] + " kb";
+                TotalPageFile = "Page file: " + CsvValues[3] + " kb";
+                AvailablePageFile = "Available page file: " + CsvValues[4] + " kb";
+                TotalVirtualMemory = "Total virtual memory: " + CsvValues[5] + " kb";
+                AvailableVirtualMemory = "Available virtual memory: " + CsvValues[6] + " kb";
+                AvailableExtendedMemory = "Total extended memory: " + CsvValues[7] + " kb";
+                this.Bindings.Update();
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error reading Common.csv: " + ex.Message);
+                Debug.WriteLine("Error reading " + CSV + ".csv: " + ex.Message);
             }
         }
     }
