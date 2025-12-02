@@ -10,6 +10,13 @@ Windows 10 1809 (17763) or above.
 
 ARM, ARM64, x86, x64 architectures are supported.
 
+Windows 10/11 Home/Pro are supported on x86/x64/ARM64 editions.
+
+Windows 10 IoT Core is supported on ARM.
+(I plan on updating the code to support all 4 archs on both supported editions.)
+
+Windows 10 Mobile and Xbox is unsupported.
+
 # Building
 
 You will need Visual Studio 2022 or later with the UWP and C++ workloads installed.
