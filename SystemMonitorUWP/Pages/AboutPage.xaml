@@ -14,7 +14,7 @@
         Text="App Info"></TextBlock>
             <TextBlock FontSize="18"
            Text="System Monitor UWP is created by Emil215p. You can find the project on Github:"/>
-            <TextBlock FontSize="14">
+            <TextBlock FontSize="18">
                 <Hyperlink NavigateUri="https://github.com/Emil215p/SystemMonitorUWP">
                     https://github.com/Emil215p/SystemMonitorUWP
                 </Hyperlink>
