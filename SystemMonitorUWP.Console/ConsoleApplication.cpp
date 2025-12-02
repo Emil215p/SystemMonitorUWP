@@ -18,7 +18,7 @@ std::wstring GetLocalFolderPath() {
     std::wstring result;
     if (SUCCEEDED(hr)) {
         result = path;
-        result += L"\\Packages\\6ec4adb3-d04f-434d-b082-22e3e256aaa3_8ycaqhn5qd882\\LocalState";
+        result += L"\\Packages\\SystemMonitorUWP_8ycaqhn5qd882\\LocalState";
     }
     CoTaskMemFree(path);
     return result;
