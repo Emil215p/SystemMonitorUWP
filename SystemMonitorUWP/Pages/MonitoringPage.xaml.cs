@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using SystemMonitorUWP.Code;
+using System.Diagnostics;
+using Windows.Storage;
 
 namespace SystemMonitorUWP.Pages
 {
@@ -27,6 +29,22 @@ namespace SystemMonitorUWP.Pages
         public MonitoringPage()
         {
             this.InitializeComponent();
+            ReadAndLogCommonTxt();
         }
+
+        private async void ReadAndLogCommonTxt()
+        {
+            try
+            {
+                StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync("Common.txt");
+                string content = await FileIO.ReadTextAsync(file);
+                Debug.WriteLine(content);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error reading Common.txt: " + ex.Message);
+            }
+        }
+
     }
 }

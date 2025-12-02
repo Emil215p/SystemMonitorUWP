@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <fstream>
+#include <ShlObj.h>
 
 using namespace std;
 
@@ -38,6 +40,18 @@ void appendMessageLine(vector<string>& arr, LPCSTR msg, DWORDLONG value) {
     oss.width(NUMERIC_WIDTH);
     oss << right << value;
     arr.push_back(oss.str());
+}
+
+std::wstring GetLocalFolderPath() {
+    PWSTR path = nullptr;
+    HRESULT hr = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &path);
+    std::wstring result;
+    if (SUCCEEDED(hr)) {
+        result = path;
+        result += L"\\Packages\\6ec4adb3-d04f-434d-b082-22e3e256aaa3_8ycaqhn5qd882\\LocalState";
+    }
+    CoTaskMemFree(path);
+    return result;
 }
 
 int main(int argc, char** argv)
@@ -79,5 +93,14 @@ int main(int argc, char** argv)
 	for (const auto& line : output) {
 		printf("%s\n", line.c_str());
 	}
+
+    std::wstring folder = GetLocalFolderPath();
+    std::wstring filePath = folder + L"\\Common.txt";
+    std::ofstream file(filePath);
+    if (file.is_open()) {
+        file << "Hello from ConsoleApplication!" << std::endl;
+        file.close();
+    }
+
     return 0;
 }
