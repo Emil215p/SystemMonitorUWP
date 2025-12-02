@@ -29,22 +29,24 @@ namespace SystemMonitorUWP.Pages
         public MonitoringPage()
         {
             this.InitializeComponent();
-            ReadAndLogCommonTxt();
+            ReadAndLogCommonCsv();
         }
 
-        private async void ReadAndLogCommonTxt()
+        private async void ReadAndLogCommonCsv()
         {
             try
             {
-                StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync("Common.txt");
-                string content = await FileIO.ReadTextAsync(file);
-                Debug.WriteLine(content);
+                StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync("Common.csv");
+                string[] lines = (await FileIO.ReadTextAsync(file)).Split([',']);
+                foreach (var line in lines)
+                {
+                    Debug.WriteLine($"Value: {line}");
+                }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error reading Common.txt: " + ex.Message);
+                Debug.WriteLine("Error reading Common.csv: " + ex.Message);
             }
         }
-
     }
 }
