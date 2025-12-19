@@ -41,6 +41,10 @@ namespace SystemMonitorUWP
                 {
                     ContentFrame.Navigate(pageType);
                 }
+                else if (args.IsSettingsSelected)
+                {
+                    ContentFrame.Navigate(typeof(Pages.SettingsPage));
+                }
             }
         }
     }
