@@ -12,6 +12,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using SystemMonitorUWP.Code;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,6 +27,7 @@ namespace SystemMonitorUWP.Pages
         public AboutPage()
         {
             this.InitializeComponent();
+            CurrentVersionText.Text = "Current Version: " + Updater.Instance.currentVersion;
         }
     }
 }

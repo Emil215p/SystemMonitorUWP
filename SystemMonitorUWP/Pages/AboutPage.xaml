@@ -19,6 +19,8 @@
                     https://github.com/Emil215p/SystemMonitorUWP
                 </Hyperlink>
             </TextBlock>
+
+            <TextBlock FontSize="18" x:Name="CurrentVersionText"></TextBlock>
     </StackPanel>
   </Grid>
 </Page>
