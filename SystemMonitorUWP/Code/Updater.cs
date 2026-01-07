@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using System.Diagnostics;
+using System.Net.Http;
 
 namespace SystemMonitorUWP.Code
 {
@@ -23,9 +24,27 @@ namespace SystemMonitorUWP.Code
         public string releaseDate = "";
         public string currentVersion = PackageVersionHelper.ToFormattedString(Package.Current.Id.Version);
 
-        public void Check_Update()
+        public async Task Check_Update()
         {
-
+            isCheckingForUpdate = true;
+            HttpClient httpClient = new();
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("SystemMonitorUWP-Updater");
+            Uri requestUri = new("https://api.github.com/repos/Emil215p/SystemMonitorUWP/releases/latest");
+            _ = new HttpResponseMessage();
+            string httpResponseBody;
+            try
+            {
+                HttpResponseMessage httpResponse = await httpClient.GetAsync(requestUri);
+                httpResponse.EnsureSuccessStatusCode();
+                httpResponseBody = await httpResponse.Content.ReadAsStringAsync();
+                Debug.WriteLine(httpResponse + httpResponseBody);
+            }
+            catch (Exception ex)
+            {
+                httpResponseBody = "Error: " + ex.HResult.ToString("X") + " Message: " + ex.Message;
+                Debug.WriteLine(httpResponseBody);
+            }
+            isCheckingForUpdate = false;
         }
 
     }

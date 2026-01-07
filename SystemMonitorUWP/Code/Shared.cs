@@ -21,7 +21,7 @@ namespace SystemMonitorUWP.Code
 
         private Shared()
         {
-
+    
         }
 
         public async Task FullTrustLauncher(LaunchActivatedEventArgs e)
