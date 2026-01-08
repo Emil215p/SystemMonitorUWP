@@ -204,6 +204,9 @@
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.7</Version>
     </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>10.0.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="SystemMonitorUWP_TemporaryKey.pfx" />
