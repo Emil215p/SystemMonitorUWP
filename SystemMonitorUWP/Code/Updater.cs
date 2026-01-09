@@ -9,6 +9,7 @@ using Windows.ApplicationModel;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
+using Windows.Storage;
 
 namespace SystemMonitorUWP.Code
 {
@@ -81,19 +82,27 @@ namespace SystemMonitorUWP.Code
             {
                 isCheckingForUpdate = false;
             }
+
+            if (updateAvailable == true)
+            {
+                Debug.WriteLine("Update is available.");
+                Download_Update();
+            }
         }
 
         public async void Download_Update()
         {
-             if (updateAvailable == false)
-            {
-                Debug.WriteLine("No update available to download.");
-                return;
-            } 
-            else
-            {
-                Debug.WriteLine("Downloading update from: " + UpdateURL);
-            }
+            Debug.WriteLine("Downloading update from: " + UpdateURL);
+
+            HttpClient httpClient = new();
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("SystemMonitorUWP-Updater");
+            Uri requestUri = new(UpdateURL);
+            _ = new HttpResponseMessage();
+            string httpResponseBody;
+
+            string fileName = "SystemMonitorUWP_" + latestVersion + ".zip";
+
+            
         }
 
     }
