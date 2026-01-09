@@ -12,6 +12,8 @@ using System.Text.Json;
 using Windows.Storage;
 using Syroot.Windows.IO;
 using System.IO;
+using System.IO.Compression;
+using Windows.Management.Deployment;
 
 namespace SystemMonitorUWP.Code
 {
@@ -29,6 +31,8 @@ namespace SystemMonitorUWP.Code
         public string currentVersion = PackageVersionHelper.ToFormattedString(Package.Current.Id.Version);
         public string UpdateURL;
         public string UpdateFilePath = "";
+        public StorageFile UpdateFile { get; set; }
+
 
         public async Task Check_Update()
         {
@@ -120,6 +124,7 @@ namespace SystemMonitorUWP.Code
                 }
 
                 UpdateFilePath = file.Path;
+                UpdateFile = file;
                 Debug.WriteLine("Update downloaded to: " + UpdateFilePath);
                 Unzip_Update();
             }
@@ -129,20 +134,71 @@ namespace SystemMonitorUWP.Code
             }
         }
 
-        public void Unzip_Update()
+        public async void Unzip_Update()
         {
             Debug.WriteLine("Unzipping...");
 
             try
             {
-                string downloadsPath = Syroot.Windows.IO.KnownFolders.Downloads.Path;
-                System.IO.Compression.ZipFile.ExtractToDirectory(UpdateFilePath, downloadsPath);
-                Debug.WriteLine("Unzipped succesfully."); 
+                using (var zipStream = await UpdateFile.OpenStreamForReadAsync())
+                using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Read))
+                {
+                    StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                    Debug.WriteLine("Extracting to: " + localFolder.Path);
+                    foreach (var entry in archive.Entries)
+                    {
+                        if (string.IsNullOrEmpty(entry.Name))
+                            continue;
+
+                        StorageFile outFile = await localFolder.CreateFileAsync(
+                            entry.Name, CreationCollisionOption.ReplaceExisting);
+
+                        using (var entryStream = entry.Open())
+                        using (var outStream = await outFile.OpenStreamForWriteAsync())
+                        {
+                            await entryStream.CopyToAsync(outStream);
+                        }
+                    }
+                }
+
+                Debug.WriteLine("Unzipped successfully.");
+                Install_Update();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Error unzipping update archive: " + ex.HResult.ToString("X") + " Message: " + ex.Message);
             }
         }
+
+        public async void Install_Update()
+        {
+            try
+            {
+                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                var files = await localFolder.GetFilesAsync();
+                var msixFile = files.FirstOrDefault(f => f.FileType.Equals(".msixbundle", StringComparison.OrdinalIgnoreCase));
+
+                if (msixFile == null)
+                {
+                    Debug.WriteLine("No .msixbundle found in LocalFolder.");
+                    return;
+                }
+
+                string packagePath = msixFile.Path;
+                var packageManager = new PackageManager();
+                var deploymentResult = await packageManager.AddPackageAsync(
+                    new Uri("file:///" + packagePath.Replace("\\", "/")),
+                    null,
+                    DeploymentOptions.None
+                );
+
+                Debug.WriteLine("Deployment result: " + deploymentResult.ToString());
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error installing update package: " + ex.HResult.ToString("X") + " Message: " + ex.Message);
+            }
+        }
+
     }
 }
