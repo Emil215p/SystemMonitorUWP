@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using Windows.Storage;
+using Syroot.Windows.IO;
+using System.IO;
 
 namespace SystemMonitorUWP.Code
 {
@@ -26,6 +28,7 @@ namespace SystemMonitorUWP.Code
         public string releaseDate = "";
         public string currentVersion = PackageVersionHelper.ToFormattedString(Package.Current.Id.Version);
         public string UpdateURL;
+        public string UpdateFilePath = "";
 
         public async Task Check_Update()
         {
@@ -70,11 +73,11 @@ namespace SystemMonitorUWP.Code
                     Version current = new Version(currentVersion);
                     updateAvailable = latest > current;
 
-                    
-                    Debug.WriteLine($"Title: {title}\nDescription: {description}\nZip: {zipUrl}\nDate: {publishedAt}\nUpdate available: {updateAvailable}\nLatest update: {latestVersion}\nCurrent update: {currentVersion }");
+
+                    Debug.WriteLine($"Title: {title}\nDescription: {description}\nZip: {zipUrl}\nDate: {publishedAt}\nUpdate available: {updateAvailable}\nLatest update: {latestVersion}\nCurrent update: {currentVersion}");
                 }
             }
-            catch (Exception ex)    
+            catch (Exception ex)
             {
                 Debug.WriteLine("Error: " + ex.HResult.ToString("X") + " Message: " + ex.Message);
             }
@@ -94,16 +97,52 @@ namespace SystemMonitorUWP.Code
         {
             Debug.WriteLine("Downloading update from: " + UpdateURL);
 
-            HttpClient httpClient = new();
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("SystemMonitorUWP-Updater");
-            Uri requestUri = new(UpdateURL);
-            _ = new HttpResponseMessage();
-            string httpResponseBody;
+            try
+            {
+                HttpClient httpClient = new();
+                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("SystemMonitorUWP-Updater");
+                Uri requestUri = new(UpdateURL);
+                _ = new HttpResponseMessage();
+                string httpResponseBody;
 
-            string fileName = "SystemMonitorUWP_" + latestVersion + ".zip";
+                string fileName = "SystemMonitorUWP_" + latestVersion + ".zip";
+                string downloadsPath = Syroot.Windows.IO.KnownFolders.Downloads.Path;
+                StorageFile file = await DownloadsFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
 
-            
+                using (var response = await httpClient.GetAsync(requestUri))
+                {
+                    response.EnsureSuccessStatusCode();
+                    using (var inputStream = await response.Content.ReadAsStreamAsync())
+                    using (var outputStream = await file.OpenStreamForWriteAsync())
+                    {
+                        await inputStream.CopyToAsync(outputStream);
+                    }
+                }
+
+                UpdateFilePath = file.Path;
+                Debug.WriteLine("Update downloaded to: " + UpdateFilePath);
+                Unzip_Update();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error downloading update: " + ex.HResult.ToString("X") + " Message: " + ex.Message);
+            }
         }
 
+        public void Unzip_Update()
+        {
+            Debug.WriteLine("Unzipping...");
+
+            try
+            {
+                string downloadsPath = Syroot.Windows.IO.KnownFolders.Downloads.Path;
+                System.IO.Compression.ZipFile.ExtractToDirectory(UpdateFilePath, downloadsPath);
+                Debug.WriteLine("Unzipped succesfully."); 
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error unzipping update archive: " + ex.HResult.ToString("X") + " Message: " + ex.Message);
+            }
+        }
     }
 }
