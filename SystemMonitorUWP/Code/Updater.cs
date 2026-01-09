@@ -189,7 +189,7 @@ namespace SystemMonitorUWP.Code
                 var deploymentResult = await packageManager.AddPackageAsync(
                     new Uri("file:///" + packagePath.Replace("\\", "/")),
                     null,
-                    DeploymentOptions.None
+                    DeploymentOptions.ForceApplicationShutdown
                 );
 
                 Debug.WriteLine("Deployment result: " + deploymentResult.ToString());
