@@ -39,6 +39,11 @@ namespace SystemMonitorUWP.Pages
                 Debug.WriteLine("Checking for updates...");
                 UpdateStatusText.Text = "Checking for updates...";
                 await Updater.Instance.Check_Update();
+                if (Updater.Instance.updateAvailable == false) 
+                { 
+                    UpdateStatusText.Text = "No updates available.";
+                    return;
+                }
             }
             else
             {

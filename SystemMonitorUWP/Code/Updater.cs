@@ -27,6 +27,7 @@ namespace SystemMonitorUWP.Code
         public bool updateAvailable = false;
         public bool isCheckingForUpdate = false;
         public bool isUpdateDownloaded = false;
+        public bool UpdateDataAvailable = false;
         public bool isUpdateUnzipped = false;
         public string latestVersion = "0.0.0";
         public string downloadLink = "";
@@ -130,6 +131,7 @@ namespace SystemMonitorUWP.Code
                 UpdateFile = file;
                 Debug.WriteLine("Update downloaded to: " + UpdateFilePath);
                 isUpdateDownloaded = true;
+                UpdateDataAvailable = true;
             }
             catch (Exception ex)
             {
@@ -201,6 +203,18 @@ namespace SystemMonitorUWP.Code
             {
                 Debug.WriteLine("Error installing update package: " + ex.HResult.ToString("X") + " Message: " + ex.Message);
             }
+        }
+
+        public async Task Update_Cleanup()
+            // Return to later once update functionality is done, if you need to clear the storage, delete the folder it places in the Downloads directory.
+        {
+            if (UpdateDataAvailable == false)
+            {
+                Debug.WriteLine("No updates downloaded, nothing to cleanup.");
+                return;
+            }
+            Debug.WriteLine("Cleaning up update files...");
+            return;
         }
     }
 }
