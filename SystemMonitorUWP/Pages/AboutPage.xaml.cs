@@ -28,8 +28,50 @@ namespace SystemMonitorUWP.Pages
         public AboutPage()
         {
             this.InitializeComponent();
-            Updater.Instance.Check_Update();
+            Full_Update();
             CurrentVersionText.Text = "Current Version: " + Updater.Instance.currentVersion;
+        }
+
+        public async void Full_Update()
+        {
+            if (Updater.Instance.isNetworkConnected == true)
+            {
+                Debug.WriteLine("Checking for updates...");
+                UpdateStatusText.Text = "Checking for updates...";
+                await Updater.Instance.Check_Update();
+            }
+            else
+            {
+                Debug.WriteLine("No internet connection. Cannot check for updates.");
+                UpdateStatusText.Text = "No internet connection. Cannot check for updates.";
+            }
+
+            if (Updater.Instance.updateAvailable == true)
+            {
+                Updater.Instance.updateAvailable = false;
+                UpdateStatusText.Text = "Update available: " + Updater.Instance.latestVersion + " Downloading...";
+                Debug.WriteLine("Update is downloading...");
+                await Updater.Instance.Download_Update();
+            }
+            else
+            {
+                Debug.WriteLine("No updates available.");
+                return;
+            }
+            if (Updater.Instance.isUpdateDownloaded == true)
+            {
+                Updater.Instance.isUpdateDownloaded = false;
+                UpdateStatusText.Text = "Update downloaded. Unzipping...";
+                Debug.WriteLine("Update is unzipping...");
+                await Updater.Instance.Unzip_Update();
+            }
+            if (Updater.Instance.isUpdateUnzipped == true)
+            {
+                Updater.Instance.isUpdateUnzipped = false;
+                UpdateStatusText.Text = "Update is installing... App will restart soon.";
+                Debug.WriteLine("Update is installing...");
+                await Updater.Instance.Install_Update();
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ using Syroot.Windows.IO;
 using System.IO;
 using System.IO.Compression;
 using Windows.Management.Deployment;
+using System.Net.NetworkInformation;
 
 namespace SystemMonitorUWP.Code
 {
@@ -22,8 +23,11 @@ namespace SystemMonitorUWP.Code
         private static readonly Updater _instance = new Updater();
         public static Updater Instance => _instance;
 
+        public bool isNetworkConnected = NetworkInterface.GetIsNetworkAvailable();
         public bool updateAvailable = false;
         public bool isCheckingForUpdate = false;
+        public bool isUpdateDownloaded = false;
+        public bool isUpdateUnzipped = false;
         public string latestVersion = "0.0.0";
         public string downloadLink = "";
         public string releaseNotes = "";
@@ -93,11 +97,10 @@ namespace SystemMonitorUWP.Code
             if (updateAvailable == true)
             {
                 Debug.WriteLine("Update is available.");
-                Download_Update();
             }
         }
 
-        public async void Download_Update()
+        public async Task Download_Update()
         {
             Debug.WriteLine("Downloading update from: " + UpdateURL);
 
@@ -126,7 +129,7 @@ namespace SystemMonitorUWP.Code
                 UpdateFilePath = file.Path;
                 UpdateFile = file;
                 Debug.WriteLine("Update downloaded to: " + UpdateFilePath);
-                Unzip_Update();
+                isUpdateDownloaded = true;
             }
             catch (Exception ex)
             {
@@ -134,7 +137,7 @@ namespace SystemMonitorUWP.Code
             }
         }
 
-        public async void Unzip_Update()
+        public async Task Unzip_Update()
         {
             Debug.WriteLine("Unzipping...");
 
@@ -161,8 +164,8 @@ namespace SystemMonitorUWP.Code
                     }
                 }
 
+                isUpdateUnzipped = true;
                 Debug.WriteLine("Unzipped successfully.");
-                Install_Update();
             }
             catch (Exception ex)
             {
@@ -170,7 +173,7 @@ namespace SystemMonitorUWP.Code
             }
         }
 
-        public async void Install_Update()
+        public async Task Install_Update()
         {
             try
             {
@@ -199,6 +202,5 @@ namespace SystemMonitorUWP.Code
                 Debug.WriteLine("Error installing update package: " + ex.HResult.ToString("X") + " Message: " + ex.Message);
             }
         }
-
     }
 }

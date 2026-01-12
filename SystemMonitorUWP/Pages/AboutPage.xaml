@@ -13,7 +13,7 @@
       <TextBlock FontWeight="Bold" FontSize="24"
         Text="App Info"></TextBlock>
             <TextBlock FontSize="18"
-           Text="System Monitor UWP is created by Emil215p. You can find the project my Github:"/>
+           Text="System Monitor UWP is created by Emil215p. You can find the project on my Github:"/>
             <TextBlock FontSize="18">
                 <Hyperlink NavigateUri="https://github.com/Emil215p/SystemMonitorUWP">
                     https://github.com/Emil215p/SystemMonitorUWP
@@ -21,6 +21,7 @@
             </TextBlock>
 
             <TextBlock FontSize="18" x:Name="CurrentVersionText"></TextBlock>
-    </StackPanel>
+            <TextBlock FontSize="18" x:Name="UpdateStatusText"></TextBlock>
+        </StackPanel>
   </Grid>
 </Page>
