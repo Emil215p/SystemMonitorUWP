@@ -34,6 +34,13 @@ namespace SystemMonitorUWP.Pages
 
         public async void Full_Update()
         {
+            Debug.WriteLine(Updater.Instance.AutoUpdateEnabled.ToString());
+            if (Updater.Instance.AutoUpdateEnabled == false)
+            {
+                Debug.WriteLine("Auto update is disabled.");
+                UpdateStatusText.Text = "Auto update is disabled.";
+                return;
+            }
             if (Updater.Instance.isNetworkConnected == true)
             {
                 Debug.WriteLine("Checking for updates...");

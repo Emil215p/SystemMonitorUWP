@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
+using SystemMonitorUWP.Code;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -34,10 +35,12 @@ namespace SystemMonitorUWP.Pages
             {
                 if (toggleSwitch.IsOn == true)
                 {
+                    Updater.Instance.AutoUpdateEnabled = true;
                     Debug.WriteLine("Toggled On");
                 }
-                else
+                else if (toggleSwitch.IsOn == false)
                 {
+                    Updater.Instance.AutoUpdateEnabled = false;
                     Debug.WriteLine("Toggled Off");
                 }
             }

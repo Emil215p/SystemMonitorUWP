@@ -23,6 +23,7 @@ namespace SystemMonitorUWP.Code
         private static readonly Updater _instance = new Updater();
         public static Updater Instance => _instance;
 
+        public bool AutoUpdateEnabled = false;
         public bool isNetworkConnected = NetworkInterface.GetIsNetworkAvailable();
         public bool updateAvailable = false;
         public bool isCheckingForUpdate = false;

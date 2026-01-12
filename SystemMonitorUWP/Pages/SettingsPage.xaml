@@ -13,7 +13,7 @@
             
             <TextBlock FontWeight="Bold" FontSize="24" Text="Settings" Padding="0,0,0,15"></TextBlock>
             
-            <ToggleSwitch x:Name="Check_Updates_Switch" Header="Enable update checker?" IsOn="True"
+            <ToggleSwitch x:Name="Check_Updates_Switch" Header="Enable update checker?" IsOn="False"
               Toggled="Update_Toggled"/>
 
             <ComboBox x:Name="ThemeSelector"
