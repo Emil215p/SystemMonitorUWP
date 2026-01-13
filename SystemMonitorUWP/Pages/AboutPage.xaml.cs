@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using SystemMonitorUWP.Code;
 using System.Diagnostics;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -84,6 +85,43 @@ namespace SystemMonitorUWP.Pages
                 Debug.WriteLine("Update is installing...");
                 await Updater.Instance.Install_Update();
             }
+        }
+
+        public async Task Update_Check_Manual()
+        {
+            Update_Button.IsEnabled = false;
+            Debug.WriteLine("Manual update check initiated.");
+
+            if (Updater.Instance.isNetworkConnected == false)
+            {
+                Debug.WriteLine("No internet connection. Cannot check for updates.");
+                UpdateStatusText.Text = "No internet connection. Cannot check for updates.";
+                return;
+            }
+            UpdateStatusText.Text = "Checking for updates...";
+            await Updater.Instance.Check_Update();
+
+            if (Updater.Instance.updateAvailable == false)
+            {
+                Debug.WriteLine("No updates available.");
+                UpdateStatusText.Text = "No updates available.";
+                return;
+            }
+            UpdateStatusText.Text = "Update available.";
+            Update_Button.IsEnabled = true;
+            Update_Button.Content = "Download Update";
+
+            Updater.Instance.Download_Update();
+        }
+
+        private void Updates_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Clicked Update.");
+        }
+
+        private void Changelog_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Clicked Changelog.");
         }
     }
 }
