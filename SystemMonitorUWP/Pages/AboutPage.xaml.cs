@@ -29,6 +29,11 @@ namespace SystemMonitorUWP.Pages
         public AboutPage()
         {
             this.InitializeComponent();
+            if (Updater.Instance.AutoUpdateEnabled == true)
+            {
+                Update_Button.IsEnabled = false;
+            }
+
             Full_Update();
             CurrentVersionText.Text = "Current Version: " + Updater.Instance.currentVersion;
         }
@@ -61,6 +66,7 @@ namespace SystemMonitorUWP.Pages
 
             if (Updater.Instance.updateAvailable == true)
             {
+                Changelog_Button.IsEnabled = true;
                 Updater.Instance.updateAvailable = false;
                 UpdateStatusText.Text = "Update available: " + Updater.Instance.latestVersion + " Downloading...";
                 Debug.WriteLine("Update is downloading...");
@@ -107,6 +113,7 @@ namespace SystemMonitorUWP.Pages
                 UpdateStatusText.Text = "No updates available.";
                 return;
             }
+            Changelog_Button.IsEnabled = true;
             UpdateStatusText.Text = "Update available.";
             Update_Button.Content = "Download Update.";
             Update_Button.IsEnabled = true;
@@ -179,9 +186,14 @@ namespace SystemMonitorUWP.Pages
             }
         }
 
-        private void Changelog_Button_Click(object sender, RoutedEventArgs e)
+        private async void Changelog_Button_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("Clicked Changelog.");
+            ContentDialog dialog = new();
+            dialog.Title = "Version " + Updater.Instance.latestVersion + " released on " +  Updater.Instance.releaseDate + " is available.";
+            dialog.Content = Updater.Instance.releaseNotes;
+            dialog.PrimaryButtonText = "OK";
+            dialog.DefaultButton = ContentDialogButton.Primary;
+            await dialog.ShowAsync();
         }
     }
 }
