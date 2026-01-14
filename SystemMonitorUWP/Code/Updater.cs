@@ -15,6 +15,7 @@ using System.IO;
 using System.IO.Compression;
 using Windows.Management.Deployment;
 using System.Net.NetworkInformation;
+using Windows.UI.Xaml.Shapes;
 
 namespace SystemMonitorUWP.Code
 {
@@ -204,18 +205,6 @@ namespace SystemMonitorUWP.Code
             {
                 Debug.WriteLine("Error installing update package: " + ex.HResult.ToString("X") + " Message: " + ex.Message);
             }
-        }
-
-        public async Task Update_Cleanup()
-            // Return to later once update functionality is done, if you need to clear the storage, delete the folder it places in the Downloads directory.
-        {
-            if (UpdateDataAvailable == false)
-            {
-                Debug.WriteLine("No updates downloaded, nothing to cleanup.");
-                return;
-            }
-            Debug.WriteLine("Cleaning up update files...");
-            return;
         }
     }
 }
