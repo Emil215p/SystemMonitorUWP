@@ -102,6 +102,7 @@ namespace SystemMonitorUWP.Pages
             {
                 Debug.WriteLine("No internet connection. Cannot check for updates.");
                 UpdateStatusText.Text = "No internet connection. Cannot check for updates.";
+                Update_Button.IsEnabled = true;
                 return;
             }
             UpdateStatusText.Text = "Checking for updates...";
@@ -110,6 +111,7 @@ namespace SystemMonitorUWP.Pages
             if (Updater.Instance.updateAvailable == false)
             {
                 Debug.WriteLine("No updates available.");
+                Update_Button.IsEnabled = true;
                 UpdateStatusText.Text = "No updates available.";
                 return;
             }
@@ -129,6 +131,7 @@ namespace SystemMonitorUWP.Pages
             if (Updater.Instance.isUpdateDownloaded == false)
             {
                 Debug.WriteLine("Update download failed.");
+                Update_Button.IsEnabled = true;
                 UpdateStatusText.Text = "Update download failed.";
                 return;
             }
@@ -140,6 +143,7 @@ namespace SystemMonitorUWP.Pages
             if (Updater.Instance.isUpdateUnzipped == false)
             {
                 Debug.WriteLine("Update unzip failed.");
+                Update_Button.IsEnabled = true;
                 UpdateStatusText.Text = "Update unzip failed.";
                 return;
             }
