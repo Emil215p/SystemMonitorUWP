@@ -23,7 +23,7 @@
             <TextBlock FontSize="18" x:Name="CurrentVersionText"></TextBlock>
             <TextBlock FontSize="18" x:Name="UpdateStatusText"></TextBlock>
             <Button Content="Check for updates." Click="Update_Button_Click" x:Name="Update_Button"></Button>
-            <Button Content="View changelog." Click="Changelog_Button_Click" x:Name="Changelog_Button" IsEnabled="False"></Button>
+            <Button Content="View changelog." Click="Changelog_Button_Click" x:Name="Changelog_Button" IsEnabled="False" ></Button>
         </StackPanel>
   </Grid>
 </Page>

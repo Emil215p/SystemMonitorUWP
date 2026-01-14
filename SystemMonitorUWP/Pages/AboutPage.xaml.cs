@@ -108,15 +108,75 @@ namespace SystemMonitorUWP.Pages
                 return;
             }
             UpdateStatusText.Text = "Update available.";
+            Update_Button.Content = "Download Update.";
             Update_Button.IsEnabled = true;
-            Update_Button.Content = "Download Update";
-
-            Updater.Instance.Download_Update();
         }
 
-        private void Updates_Button_Click(object sender, RoutedEventArgs e)
+        public async Task Update_Download_Manual()
+        {
+            Update_Button.IsEnabled = false;
+            Debug.WriteLine("Manual update download initiated.");
+
+            UpdateStatusText.Text = "Downloading update...";
+            await Updater.Instance.Download_Update();
+            if (Updater.Instance.isUpdateDownloaded == false)
+            {
+                Debug.WriteLine("Update download failed.");
+                UpdateStatusText.Text = "Update download failed.";
+                return;
+            }
+
+            UpdateStatusText.Text = "Update is downloaded. Unzipping...";
+            
+            await Updater.Instance.Unzip_Update();
+
+            if (Updater.Instance.isUpdateUnzipped == false)
+            {
+                Debug.WriteLine("Update unzip failed.");
+                UpdateStatusText.Text = "Update unzip failed.";
+                return;
+            }
+
+            UpdateStatusText.Text = "Update ready to install.";
+            Update_Button.Content = "Install Update.";
+            Update_Button.IsEnabled = true;
+        }
+
+        public async Task Install_Update_Manual()
+        {
+            Update_Button.IsEnabled = false;
+            Debug.WriteLine("Manual update install initiated.");
+            UpdateStatusText.Text = "Installing update... App will restart soon.";
+            await Updater.Instance.Install_Update();
+        }
+
+        private async void Update_Button_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("Clicked Update.");
+
+            if (Update_Button.Content.ToString() == "Check for updates.")
+            {
+                Debug.WriteLine("Update Check");
+                await Update_Check_Manual();
+                return;
+            }
+            if (Update_Button.Content.ToString() == "Download Update.")
+            {
+                Debug.WriteLine("Update Download");
+                await Update_Download_Manual();
+                return;
+            }
+            if (Update_Button.Content.ToString() == "Install Update.")
+            {
+                Debug.WriteLine("Update Install");
+                await Install_Update_Manual();
+                return;
+            }
+            else
+            {
+                Debug.WriteLine("Error: Unknown action.");
+                return;
+            }
         }
 
         private void Changelog_Button_Click(object sender, RoutedEventArgs e)

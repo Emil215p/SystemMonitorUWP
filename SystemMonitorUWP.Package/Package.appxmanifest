@@ -20,7 +20,7 @@
   <Identity
     Name="SystemMonitorUWP"
     Publisher="CN=juele"
-    Version="1.0.14.0" />
+    Version="1.0.13.0" />
 
   <Properties>
     <DisplayName>SystemMonitorUWP.Package</DisplayName>
