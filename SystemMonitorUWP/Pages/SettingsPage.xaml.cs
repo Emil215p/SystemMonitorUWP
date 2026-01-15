@@ -14,6 +14,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
 using SystemMonitorUWP.Code;
+using Windows.Storage;
+using Windows.System.Profile;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -26,6 +28,7 @@ namespace SystemMonitorUWP.Pages
     {
         public SettingsPage()
         {
+            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             this.InitializeComponent();
         }
 
@@ -36,12 +39,12 @@ namespace SystemMonitorUWP.Pages
                 if (toggleSwitch.IsOn == true)
                 {
                     Updater.Instance.AutoUpdateEnabled = true;
-                    Debug.WriteLine("Toggled On");
+                    Debug.WriteLine("Auto update toggled on");
                 }
                 else if (toggleSwitch.IsOn == false)
                 {
                     Updater.Instance.AutoUpdateEnabled = false;
-                    Debug.WriteLine("Toggled Off");
+                    Debug.WriteLine("Auto update toggled off");
                 }
             }
         }
@@ -49,6 +52,23 @@ namespace SystemMonitorUWP.Pages
         private void ThemeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selected = (ThemeSelector.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+            if (selected == "Light")
+            {
+                Debug.WriteLine("Light theme enabled");
+            }
+            else if (selected == "Dark")
+            {
+                Debug.WriteLine("Dark theme enabled");
+            }
+            else if (selected == "System Default")
+            {
+                Debug.WriteLine("System default theme enabled");
+            }
+            else
+            {
+                Debug.WriteLine("Unknown theme");
+            }
         }
 
         private void New_Monitor_Desktop_Switch_Toggled(object sender, RoutedEventArgs e)
@@ -57,11 +77,13 @@ namespace SystemMonitorUWP.Pages
             {
                 if (toggleSwitch.IsOn == true)
                 {
-                    Debug.WriteLine("Toggled On");
+                    Debug.WriteLine("New monitor enabled");
+                    var analyticsInfo = AnalyticsInfo.VersionInfo.DeviceFamily;
+                    Debug.WriteLine(analyticsInfo);
                 }
                 else
                 {
-                    Debug.WriteLine("Toggled Off");
+                    Debug.WriteLine("New monitor enabled");
                 }
             }
         }
