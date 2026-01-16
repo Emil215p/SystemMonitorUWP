@@ -29,46 +29,61 @@ namespace SystemMonitorUWP.Pages
     {
         public SettingsPage()
         {
-            //ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             this.InitializeComponent();
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+            if (localSettings.Values["Auto_Update"] is bool autoUpdate && autoUpdate == true)
+            {
+                Check_Updates_Switch.IsOn = true;
+            }
+            if (localSettings.Values["AppTheme"].ToString() == "Light")
+            {
+                ThemeSelector.SelectedIndex = 0;
+            }
+            else if (localSettings.Values["AppTheme"].ToString() == "Dark")
+            {
+                ThemeSelector.SelectedIndex = 1;
+            }
+            else
+            {
+                ThemeSelector.SelectedIndex = 2;
+            }
         }
         public string DevFam = AnalyticsInfo.VersionInfo.DeviceFamily;
 
         private void Update_Toggled(object sender, RoutedEventArgs e)
         {
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             if (sender is ToggleSwitch toggleSwitch)
             {
-                if (toggleSwitch.IsOn == true)
-                {
-                    Updater.Instance.AutoUpdateEnabled = true;
-                    Debug.WriteLine("Auto update toggled on");
-                }
-                else if (toggleSwitch.IsOn == false)
-                {
-                    Updater.Instance.AutoUpdateEnabled = false;
-                    Debug.WriteLine("Auto update toggled off");
-                }
+                localSettings.Values["Auto_Update"] = toggleSwitch.IsOn;
+                Updater.Instance.AutoUpdateEnabled = toggleSwitch.IsOn;
+                Debug.WriteLine($"Auto update toggled {(toggleSwitch.IsOn ? "on" : "off")}");
             }
         }
 
         private void ThemeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selected = (ThemeSelector.SelectedItem as ComboBoxItem)?.Content.ToString();
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
             if (selected == "Light")
             {
                 Debug.WriteLine("Light theme enabled");
                 ((Frame)Window.Current.Content).RequestedTheme = ElementTheme.Light;
+                localSettings.Values["AppTheme"] = "Light";
             }
             else if (selected == "Dark")
             {
                 Debug.WriteLine("Dark theme enabled");
                 ((Frame)Window.Current.Content).RequestedTheme = ElementTheme.Dark;
+                localSettings.Values["AppTheme"] = "Dark";
             }
             else if (selected == "System Default")
             {
                 Debug.WriteLine("System default theme enabled");
                 ((Frame)Window.Current.Content).RequestedTheme = ElementTheme.Default;
+                localSettings.Values["AppTheme"] = "System Default";
             }
             else
             {

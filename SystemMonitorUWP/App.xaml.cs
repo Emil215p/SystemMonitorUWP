@@ -37,6 +37,29 @@ namespace SystemMonitorUWP
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
             await Shared.Instance.FullTrustLauncher(e);
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+            if (localSettings.Values["AppTheme"] is string savedTheme)
+            {
+                var frame = Window.Current.Content as Frame;
+                if (frame == null)
+                {
+                    frame = new Frame();
+                    Window.Current.Content = frame;
+                }
+
+                frame.RequestedTheme = savedTheme switch
+                {
+                    "Light" => ElementTheme.Light,
+                    "Dark" => ElementTheme.Dark,
+                    _ => ElementTheme.Default,
+                };
+            }
+
+            if (localSettings.Values["Auto_Update"] is bool autoUpdate)
+            {
+                SystemMonitorUWP.Code.Updater.Instance.AutoUpdateEnabled = autoUpdate;
+            }
         }
 
         private void OnSuspending(object sender, SuspendingEventArgs e)

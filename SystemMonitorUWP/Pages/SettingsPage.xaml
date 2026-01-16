@@ -13,12 +13,11 @@
             
             <TextBlock FontWeight="Bold" FontSize="24" Text="Settings" Padding="0,0,0,15"></TextBlock>
             
-            <ToggleSwitch x:Name="Check_Updates_Switch" Header="Enable update checker?" IsOn="False"
+            <ToggleSwitch x:Name="Check_Updates_Switch" Header="Enable automatic updates?" IsOn="False"
               Toggled="Update_Toggled"/>
 
             <ComboBox x:Name="ThemeSelector"
                   Header="Choose app theme:"
-                  SelectedIndex="2"
                   SelectionChanged="ThemeSelector_SelectionChanged">
                 <ComboBoxItem Content="Light" />
                 <ComboBoxItem Content="Dark" />
@@ -27,7 +26,7 @@
 
             <TextBlock FontWeight="Bold" FontSize="24" Text="Experimental settings" Padding="0, 15, 0, 0"></TextBlock>
             
-            <ToggleSwitch x:Name="New_Monitor_Desktop_Switch" Header="Enable improved monitoring (Desktop only)" IsOn="False"
+            <ToggleSwitch x:Name="New_Monitor_Desktop_Switch" Header="Enable improved monitoring (Desktop only, does nothing.)" IsOn="False"
                           Toggled="New_Monitor_Desktop_Switch_Toggled"></ToggleSwitch>
         </StackPanel>
     </Grid>
