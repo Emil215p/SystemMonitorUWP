@@ -32,6 +32,15 @@ namespace SystemMonitorUWP.Pages
             this.InitializeComponent();
             var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
+            if (localSettings.Values["AppTheme"] == null)
+            {
+                localSettings.Values["AppTheme"] = "System Default";
+            }
+            if (localSettings.Values["Auto_Update"] == null)
+            {
+                localSettings.Values["Auto_Update"] = false;
+            }
+
             if (localSettings.Values["Auto_Update"] is bool autoUpdate && autoUpdate == true)
             {
                 Check_Updates_Switch.IsOn = true;
