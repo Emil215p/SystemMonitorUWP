@@ -155,6 +155,9 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.UI.Xaml">
+      <Version>2.8.7</Version>
+    </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
       <Version>4.0.2</Version>
     </PackageReference>
@@ -164,6 +167,9 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.5-beta1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
