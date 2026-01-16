@@ -113,7 +113,6 @@ namespace SystemMonitorUWP.Code
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("SystemMonitorUWP-Updater");
                 Uri requestUri = new(UpdateURL);
                 _ = new HttpResponseMessage();
-                string httpResponseBody;
 
                 string fileName = "SystemMonitorUWP_" + latestVersion + ".zip";
                 string downloadsPath = Syroot.Windows.IO.KnownFolders.Downloads.Path;
@@ -196,7 +195,7 @@ namespace SystemMonitorUWP.Code
                 var deploymentResult = await packageManager.AddPackageAsync(
                     new Uri("file:///" + packagePath.Replace("\\", "/")),
                     null,
-                    DeploymentOptions.ForceApplicationShutdown
+                    DeploymentOptions.ForceUpdateFromAnyVersion
                 );
 
                 Debug.WriteLine("Deployment result: " + deploymentResult.ToString());

@@ -16,6 +16,7 @@ using System.Diagnostics;
 using SystemMonitorUWP.Code;
 using Windows.Storage;
 using Windows.System.Profile;
+using Windows.UI;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -31,6 +32,7 @@ namespace SystemMonitorUWP.Pages
             ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             this.InitializeComponent();
         }
+        public string DevFam = AnalyticsInfo.VersionInfo.DeviceFamily;
 
         private void Update_Toggled(object sender, RoutedEventArgs e)
         {
@@ -56,14 +58,17 @@ namespace SystemMonitorUWP.Pages
             if (selected == "Light")
             {
                 Debug.WriteLine("Light theme enabled");
+                ((Frame)Window.Current.Content).RequestedTheme = ElementTheme.Light;
             }
             else if (selected == "Dark")
             {
                 Debug.WriteLine("Dark theme enabled");
+                ((Frame)Window.Current.Content).RequestedTheme = ElementTheme.Dark;
             }
             else if (selected == "System Default")
             {
                 Debug.WriteLine("System default theme enabled");
+                ((Frame)Window.Current.Content).RequestedTheme = ElementTheme.Default;
             }
             else
             {
@@ -77,13 +82,17 @@ namespace SystemMonitorUWP.Pages
             {
                 if (toggleSwitch.IsOn == true)
                 {
+                    if (DevFam != "Windows.Desktop")
+                    {
+                        Debug.WriteLine("Unsupported option.");
+                        toggleSwitch.IsOn = false;
+                        return;
+                    }
                     Debug.WriteLine("New monitor enabled");
-                    var analyticsInfo = AnalyticsInfo.VersionInfo.DeviceFamily;
-                    Debug.WriteLine(analyticsInfo);
                 }
-                else
+                else if (toggleSwitch.IsOn == false)
                 {
-                    Debug.WriteLine("New monitor enabled");
+                    Debug.WriteLine("New monitor is disabled.");
                 }
             }
         }
