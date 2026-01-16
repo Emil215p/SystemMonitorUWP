@@ -21,7 +21,7 @@ namespace SystemMonitorUWP.Code
 {
     public class Updater
     {
-        private static readonly Updater _instance = new Updater();
+        private static readonly Updater _instance = new();
         public static Updater Instance => _instance;
 
         public bool AutoUpdateEnabled = false;
@@ -56,37 +56,35 @@ namespace SystemMonitorUWP.Code
                 httpResponseBody = await httpResponse.Content.ReadAsStringAsync();
                 Debug.WriteLine(httpResponse + httpResponseBody);
 
-                using (JsonDocument doc = JsonDocument.Parse(httpResponseBody))
+                using JsonDocument doc = JsonDocument.Parse(httpResponseBody);
+                var root = doc.RootElement;
+                string title = root.GetProperty("name").GetString();
+                string description = root.GetProperty("body").GetString();
+                string publishedAt = root.GetProperty("created_at").GetString();
+                string tagName = root.GetProperty("tag_name").GetString();
+                string zipUrl = "";
+                foreach (var asset in root.GetProperty("assets").EnumerateArray())
                 {
-                    var root = doc.RootElement;
-                    string title = root.GetProperty("name").GetString();
-                    string description = root.GetProperty("body").GetString();
-                    string publishedAt = root.GetProperty("created_at").GetString();
-                    string tagName = root.GetProperty("tag_name").GetString();
-                    string zipUrl = "";
-                    foreach (var asset in root.GetProperty("assets").EnumerateArray())
+                    string assetName = asset.GetProperty("name").GetString();
+                    if (assetName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                     {
-                        string assetName = asset.GetProperty("name").GetString();
-                        if (assetName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
-                        {
-                            zipUrl = asset.GetProperty("browser_download_url").GetString();
-                            break;
-                        }
+                        zipUrl = asset.GetProperty("browser_download_url").GetString();
+                        break;
                     }
-
-                    latestVersion = tagName;
-                    releaseNotes = description;
-                    releaseDate = publishedAt;
-                    downloadLink = zipUrl;
-                    UpdateURL = zipUrl;
-
-                    Version latest = new Version(latestVersion);
-                    Version current = new Version(currentVersion);
-                    updateAvailable = latest > current;
-
-
-                    Debug.WriteLine($"Title: {title}\nDescription: {description}\nZip: {zipUrl}\nDate: {publishedAt}\nUpdate available: {updateAvailable}\nLatest update: {latestVersion}\nCurrent update: {currentVersion}");
                 }
+
+                latestVersion = tagName;
+                releaseNotes = description;
+                releaseDate = publishedAt;
+                downloadLink = zipUrl;
+                UpdateURL = zipUrl;
+
+                Version latest = new(latestVersion);
+                Version current = new(currentVersion);
+                updateAvailable = latest > current;
+
+
+                Debug.WriteLine($"Title: {title}\nDescription: {description}\nZip: {zipUrl}\nDate: {publishedAt}\nUpdate available: {updateAvailable}\nLatest update: {latestVersion}\nCurrent update: {currentVersion}");
             }
             catch (Exception ex)
             {
@@ -121,11 +119,9 @@ namespace SystemMonitorUWP.Code
                 using (var response = await httpClient.GetAsync(requestUri))
                 {
                     response.EnsureSuccessStatusCode();
-                    using (var inputStream = await response.Content.ReadAsStreamAsync())
-                    using (var outputStream = await file.OpenStreamForWriteAsync())
-                    {
-                        await inputStream.CopyToAsync(outputStream);
-                    }
+                    using var inputStream = await response.Content.ReadAsStreamAsync();
+                    using var outputStream = await file.OpenStreamForWriteAsync();
+                    await inputStream.CopyToAsync(outputStream);
                 }
 
                 UpdateFilePath = file.Path;
@@ -159,11 +155,9 @@ namespace SystemMonitorUWP.Code
                         StorageFile outFile = await localFolder.CreateFileAsync(
                             entry.Name, CreationCollisionOption.ReplaceExisting);
 
-                        using (var entryStream = entry.Open())
-                        using (var outStream = await outFile.OpenStreamForWriteAsync())
-                        {
-                            await entryStream.CopyToAsync(outStream);
-                        }
+                        using var entryStream = entry.Open();
+                        using var outStream = await outFile.OpenStreamForWriteAsync();
+                        await entryStream.CopyToAsync(outStream);
                     }
                 }
 

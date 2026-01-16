@@ -192,11 +192,13 @@ namespace SystemMonitorUWP.Pages
 
         private async void Changelog_Button_Click(object sender, RoutedEventArgs e)
         {
-            ContentDialog dialog = new();
-            dialog.Title = "Version " + Updater.Instance.latestVersion + " released on " +  Updater.Instance.releaseDate + " is available.";
-            dialog.Content = Updater.Instance.releaseNotes;
-            dialog.PrimaryButtonText = "OK";
-            dialog.DefaultButton = ContentDialogButton.Primary;
+            ContentDialog dialog = new()
+            {
+                Title = "Version " + Updater.Instance.latestVersion + " released on " + Updater.Instance.releaseDate + " is available.",
+                Content = Updater.Instance.releaseNotes,
+                PrimaryButtonText = "OK",
+                DefaultButton = ContentDialogButton.Primary
+            };
             await dialog.ShowAsync();
         }
     }

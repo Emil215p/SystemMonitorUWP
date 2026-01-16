@@ -15,7 +15,7 @@ namespace SystemMonitorUWP.Code
 {
     public class Shared
     {
-        private static readonly Shared _instance = new Shared();
+        private static readonly Shared _instance = new();
         public static Shared Instance => _instance;
         public string filePath;
 

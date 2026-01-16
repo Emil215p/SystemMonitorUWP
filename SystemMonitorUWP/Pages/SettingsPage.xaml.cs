@@ -29,7 +29,7 @@ namespace SystemMonitorUWP.Pages
     {
         public SettingsPage()
         {
-            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            //ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             this.InitializeComponent();
         }
         public string DevFam = AnalyticsInfo.VersionInfo.DeviceFamily;
