@@ -10,6 +10,7 @@ using Windows.ApplicationModel;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
+using Windows.Security.Authentication.OnlineId;
 
 namespace SystemMonitorUWP.Code
 {
@@ -49,7 +50,7 @@ namespace SystemMonitorUWP.Code
                     }
 
                     Debug.WriteLine(RuntimeInformation.OSArchitecture.ToString());
-                    if (RuntimeInformation.OSArchitecture.ToString() != "X64")
+                    if (1 + 1 == 3)
                     {
                         try
                         {
@@ -61,7 +62,7 @@ namespace SystemMonitorUWP.Code
                             Debug.WriteLine($"Failed to launch console app: {ex.Message}");
                         }
                     }
-                    else if (RuntimeInformation.OSArchitecture.ToString() == "Arm")
+                    else if (1 + 1 == 2)
                     {
                         try
                         {
