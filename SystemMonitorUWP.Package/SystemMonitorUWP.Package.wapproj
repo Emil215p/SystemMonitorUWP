@@ -168,9 +168,17 @@
     <ProjectReference Include="..\SystemMonitorUWP.Console\SystemMonitorUWP.Console.vcxproj" />
     <ProjectReference Include="..\SystemMonitorUWP\SystemMonitorUWP.csproj" />
   </ItemGroup>
+  <PropertyGroup>
+  <ConsolePlatform Condition="'$(Platform)' == 'x86'">Win32</ConsolePlatform>
+  <ConsolePlatform Condition="'$(Platform)' == 'x64'">x64</ConsolePlatform>
+  <ConsolePlatform Condition="'$(Platform)' == 'ARM64'">ARM64</ConsolePlatform>
+  <ConsolePlatform Condition="'$(Platform)' == 'ARM'">ARM</ConsolePlatform>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Content Include="..\ARM\$(Configuration)\SystemMonitorUWP.Console.exe">
-      <PackagePath>SystemMonitorUWP.Console.exe</PackagePath>
+    <Content Include="..\SystemMonitorUWP.Console\$(ConsolePlatform)\$(Configuration)\SystemMonitorUWP.Console.exe">
+      <Link>SystemMonitorUWP.Console.exe</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 </Project>

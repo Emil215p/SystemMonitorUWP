@@ -49,7 +49,7 @@ namespace SystemMonitorUWP.Code
                     }
 
                     Debug.WriteLine(RuntimeInformation.OSArchitecture.ToString());
-                    if (RuntimeInformation.OSArchitecture.ToString() != "Arm")
+                    if (RuntimeInformation.OSArchitecture.ToString() != "X64")
                     {
                         try
                         {
@@ -86,7 +86,7 @@ namespace SystemMonitorUWP.Code
                 Debug.WriteLine("LaunchActivatedEventArgs is null. Skipping navigation and argument-dependent logic.");
 
                 Debug.WriteLine(RuntimeInformation.OSArchitecture.ToString());
-                if (RuntimeInformation.OSArchitecture.ToString() != "Arm")
+                if (RuntimeInformation.OSArchitecture.ToString() != "X64")
                 {
                     try
                     {
@@ -98,7 +98,7 @@ namespace SystemMonitorUWP.Code
                         Debug.WriteLine($"Failed to launch console app: {ex.Message}");
                     }
                 }
-                else if (RuntimeInformation.OSArchitecture.ToString() == "Arm")
+                else if (RuntimeInformation.OSArchitecture.ToString() == "X64")
                 {
                     try
                     {
